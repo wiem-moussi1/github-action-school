@@ -1,7 +1,13 @@
 name: CI/CD Pipeline exercice 
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+   inputs:
+    skip:
+      type: boolean
+      description: "skip pushing to docker hub"
+      default: false
+  
 
 jobs:
   lint-and-test:
@@ -45,5 +51,6 @@ jobs:
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/github-action-school .
       - name: Push to Dockerhub
+        if: ${{ github.event_name != 'workflow_dispatch' }}  
         run: docker push ${{ secrets.DOCKER_USERNAME }}/github-action-school
 
