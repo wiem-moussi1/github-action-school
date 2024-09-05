@@ -1,7 +1,7 @@
 name: CI Pipeline3
 
 on:
-  workflow_dispatch:
+  workflow_dispatch
 
 jobs:
   test_and_lint:
@@ -49,6 +49,7 @@ jobs:
 
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/github-action-school .
-        
+
       - name: Push to Dockerhub
+      
         run: docker push ${{ secrets.DOCKER_USERNAME }}/github-action-school
