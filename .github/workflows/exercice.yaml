@@ -1,13 +1,12 @@
-name: CI Pipeline
+name: CI/CD Pipeline exercice 
 
 on:
   workflow_dispatch
 
 jobs:
-  test_and_lint:
-    name: Test and Lint the Code
+  lint-and-test:
+    name: Linting and testing
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         id: checkout
@@ -19,7 +18,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install Dependencies
         id: npm-ci
         run: npm ci
 
@@ -27,28 +26,25 @@ jobs:
         id: npm-lint
         run: npm run lint
 
-      - name: Run Tests
+      - name: Run Test
         id: npm-ci-test
-        run: npm test
-
+        run: npm run test
   build-and-push:
     name: Build and push docker image
     runs-on: ubuntu-latest
-    needs: test_and_lint
-
+    needs: lint-and-test
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
-
       - name: Login to Dockerhub
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/github-action-school .
-
       - name: Push to Dockerhub
+        if: ${{ github.event_name != 'workflow_dispatch' }}  
         run: docker push ${{ secrets.DOCKER_USERNAME }}/github-action-school
+
