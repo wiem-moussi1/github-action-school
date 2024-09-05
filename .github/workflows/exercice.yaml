@@ -51,6 +51,6 @@ jobs:
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/github-action-school .
       - name: Push to Dockerhub
-        if: ${{ github.event_name != 'workflow_dispatch' }}  
+        if: ${{ inputs.skip == 'false' }}  
         run: docker push ${{ secrets.DOCKER_USERNAME }}/github-action-school
 
