@@ -19,8 +19,8 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        id: npm-ci
-        run: npm ci
+        id: npm-i
+        run: npm i
 
       - name: Run Lint
         id: npm-lint
